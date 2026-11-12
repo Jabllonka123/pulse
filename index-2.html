@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pulse — centrum ankiet</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#080a0e;--panel:#111418;--panel2:#191e23;--line:#30363d;--muted:#9299a1;--text:#f4f5f6;--violet:#aeb5bd;--mint:#b8e7d0;--red:#ff7185}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -18%,#30363d 0,transparent 42%),var(--bg);color:var(--text);font:15px Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;min-height:100vh}
+button,input,textarea,select{font:inherit}button{cursor:pointer;border:0}.hidden{display:none!important}.muted{color:var(--muted)}.small{font-size:12px}.wrap{max-width:1180px;margin:auto;padding:24px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px}.brand{display:flex;align-items:center;gap:12px;font-weight:800;font-size:20px;letter-spacing:.5px}.logo{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,#555d66,#171b20);display:grid;place-items:center;box-shadow:0 8px 30px #0009;border:1px solid #ffffff25}.logo svg{width:23px}.userbar{display:flex;align-items:center;gap:12px}.avatar{width:34px;height:34px;border-radius:50%;background:#293554;display:grid;place-items:center;font-weight:700}.layout{display:grid;grid-template-columns:220px 1fr;gap:22px}.side,.panel,.stat,.survey-card{background:linear-gradient(145deg,#14181d,#0e1115);border:1px solid var(--line);border-radius:20px;box-shadow:0 18px 55px #0005}.side{padding:12px;height:max-content;position:sticky;top:18px}.nav{width:100%;display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;background:transparent;color:var(--muted);text-align:left;margin:3px 0}.nav.active,.nav:hover{background:#252a30;color:#fff}.nav .ico{width:20px;text-align:center}.main{min-width:0}.welcome{margin:4px 0 22px}.welcome h1{font-size:clamp(27px,4vw,38px);margin:0 0 8px;letter-spacing:-1.2px}.welcome p{color:var(--muted);margin:0}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}.stat{padding:18px;animation:rise .5s both}.stat .n{font-size:30px;font-weight:800;margin:10px 0 3px}.stat .sico{color:var(--mint);font-size:19px}.panel{padding:20px;margin-bottom:18px}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.panel h2{font-size:18px;margin:0}.btn{background:linear-gradient(135deg,var(--violet),#6b5be7);color:white;padding:11px 16px;border-radius:12px;font-weight:700;box-shadow:0 7px 22px #7665f533;transition:.2s}.btn:hover{transform:translateY(-2px);filter:brightness(1.1)}.btn.secondary{background:#20252b;box-shadow:none;color:#e7ebfa;border:1px solid var(--line)}.btn.danger{background:#512536;box-shadow:none}.field{display:grid;gap:7px;margin:12px 0}.field label{font-size:13px;color:#c1cbe0}.field input,.field textarea,.field select{width:100%;border:1px solid var(--line);background:#0c0f13;color:white;border-radius:11px;padding:12px;outline:none}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--violet);box-shadow:0 0 0 3px #8877ff20}.field textarea{min-height:80px;resize:vertical}.auth{max-width:430px;margin:8vh auto;padding:28px}.auth h1{font-size:30px;margin:0 0 8px}.tabs{display:flex;gap:8px;margin:18px 0}.tabs button{flex:1;padding:10px;border-radius:10px;background:#1c2740;color:var(--muted)}.tabs button.active{background:#342d69;color:white}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(245px,1fr));gap:14px}.survey-card{padding:18px;transition:.25s;animation:rise .45s both}.survey-card:hover{transform:translateY(-4px);border-color:#6659c9}.tag{display:inline-flex;padding:5px 9px;border-radius:20px;background:#292451;color:#c6bdff;font-size:11px;font-weight:700}.survey-card h3{margin:13px 0 7px}.survey-card p{color:var(--muted);font-size:13px;line-height:1.5;min-height:38px}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.between{justify-content:space-between}.question{padding:15px;border:1px solid var(--line);border-radius:14px;margin:12px 0;background:#0e1729}.choice{display:flex;gap:10px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:10px;margin:8px 0;cursor:pointer}.choice:has(input:checked){border-color:var(--violet);background:#211f42}.choice input{accent-color:var(--violet)}.bar{height:8px;background:#27324b;border-radius:20px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--violet),var(--mint));border-radius:20px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;font-size:13px}th,td{text-align:left;padding:12px;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--muted);font-weight:600}.empty{text-align:center;padding:38px;color:var(--muted)}.notice{padding:12px 14px;border-radius:12px;background:#1c2941;color:#cbd5ea;font-size:13px;margin:12px 0}.error{color:#ff9aa8}.success{color:var(--mint)}.q-actions{display:flex;justify-content:space-between;align-items:center;margin-top:10px}.divider{height:1px;background:var(--line);margin:18px 0}
+.hero-scene{height:330px;position:relative;overflow:hidden;border:1px solid #343a40;border-radius:24px;background:radial-gradient(ellipse at 50% 48%,#333a40 0,#171b20 34%,#090b0e 76%);margin:0 0 24px;perspective:1200px}
+.hero-glow{position:absolute;width:360px;height:210px;left:50%;top:42%;transform:translate(-50%,-50%);background:#cbd2d9;filter:blur(100px);opacity:.12}
+.survey-float{position:absolute;width:280px;height:178px;left:calc(50% - 170px);top:55px;transform-style:preserve-3d;animation:surveyFlight 8s ease-in-out infinite;z-index:2}
+.survey-face{height:100%;border-radius:17px;padding:20px 22px;position:relative;overflow:hidden;color:#f5f6f7;background:linear-gradient(135deg,#3b4147 0%,#111519 52%,#282e34 100%);border:1px solid #ffffff35;box-shadow:0 28px 75px #000c,inset 0 1px 1px #ffffff38;backface-visibility:hidden}
+.survey-face:before{content:"";position:absolute;inset:-100%;background:linear-gradient(110deg,transparent 42%,#ffffff2c 50%,transparent 58%);animation:cardShine 4s ease-in-out infinite}
+.survey-face:after{content:"";position:absolute;width:190px;height:190px;right:-85px;top:-85px;border-radius:50%;border:1px solid #ffffff22;box-shadow:0 0 0 22px #ffffff08,0 0 0 44px #ffffff06}
+.survey-top{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1}
+.survey-brand{font-size:12px;letter-spacing:3px;font-weight:900}
+.survey-mark{font-size:22px;color:#dce0e3}
+.survey-line{height:7px;border-radius:10px;background:#ffffff20;margin-top:17px;position:relative;z-index:1}
+.survey-line.short{width:55%;margin-top:9px}
+.survey-question{font-size:15px;font-weight:700;margin-top:16px;position:relative;z-index:1}
+.survey-options{display:flex;gap:7px;margin-top:13px;position:relative;z-index:1}
+.survey-options span{width:48px;height:20px;border-radius:6px;border:1px solid #ffffff45;background:#ffffff0b}
+.survey-options span:first-child{background:#d8dde2;color:#171b20}
+.result-terminal{position:absolute;width:158px;height:174px;right:13%;bottom:37px;border-radius:18px;background:linear-gradient(145deg,#30363c,#101317);border:1px solid #ffffff35;box-shadow:0 20px 55px #000c;opacity:0;transform:translateY(28px) rotateY(-8deg);animation:resultReveal 8s ease-in-out infinite;padding:13px}
+.result-screen{height:92px;border-radius:10px;background:#0c1714;border:1px solid #263b34;display:flex;align-items:center;justify-content:center;color:#9ce8bd;font-size:36px;box-shadow:inset 0 0 25px #5be7a01a}
+.result-bars{display:flex;align-items:end;justify-content:center;gap:7px;height:40px;padding-top:9px}
+.result-bars i{width:13px;border-radius:4px 4px 1px 1px;background:linear-gradient(#dce3e7,#777f87);animation:barPulse 1.5s ease-in-out infinite alternate}
+.result-bars i:nth-child(1){height:35%}.result-bars i:nth-child(2){height:70%;animation-delay:.2s}.result-bars i:nth-child(3){height:52%;animation-delay:.4s}.result-bars i:nth-child(4){height:100%;animation-delay:.6s}
+.hero-status{position:absolute;left:50%;bottom:23px;transform:translate(-50%,14px);font-size:11px;letter-spacing:3px;font-weight:800;color:#b8e7d0;opacity:0;white-space:nowrap;animation:heroSuccess 8s ease-in-out infinite}
+.hero-copy{position:absolute;left:28px;bottom:25px;z-index:3;max-width:210px}
+.hero-copy b{display:block;font-size:11px;letter-spacing:2px;color:#b8c0c7;margin-bottom:7px}
+.hero-copy span{font-size:12px;color:#8f989f;line-height:1.5}
+@keyframes surveyFlight{0%,8%{transform:translate(0,0) rotateY(0) rotateX(5deg)}20%{transform:translate(18px,-20px) rotateY(180deg) rotateX(10deg)}34%{transform:translate(18px,-20px) rotateY(360deg) rotateX(5deg)}48%,72%{transform:translate(-78px,22px) rotateY(360deg) rotateX(12deg) scale(.82)}85%{transform:translate(0,-10px) rotateY(180deg) rotateX(5deg)}100%{transform:translate(0,0) rotateY(0) rotateX(5deg)}}
+@keyframes resultReveal{0%,38%{opacity:0;transform:translateY(28px) rotateY(-8deg)}48%,72%{opacity:1;transform:translateY(0) rotateY(0)}85%,100%{opacity:0;transform:translateY(28px) rotateY(-8deg)}}
+@keyframes heroSuccess{0%,57%{opacity:0;transform:translate(-50%,14px)}65%,77%{opacity:1;transform:translate(-50%,0)}88%,100%{opacity:0;transform:translate(-50%,14px)}}
+@keyframes cardShine{0%,30%{transform:translateX(-50%) rotate(25deg)}70%,100%{transform:translateX(50%) rotate(25deg)}}
+@keyframes barPulse{from{filter:brightness(.75)}to{filter:brightness(1.35)}}
+@media(max-width:650px){.hero-scene{height:300px}.survey-float{width:245px;height:164px;left:calc(50% - 130px);top:48px}.result-terminal{right:5%;bottom:34px;transform:scale(.82)}.hero-copy{left:16px;bottom:14px;max-width:150px}.hero-copy span{font-size:10px}}
+@media(prefers-reduced-motion:reduce){.survey-float,.result-terminal,.hero-status,.survey-face:before,.result-bars i{animation:none}}
+
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}@media(max-width:760px){.wrap{padding:15px}.layout{grid-template-columns:1fr}.side{position:static;display:flex;overflow:auto;padding:7px}.nav{white-space:nowrap;width:auto;padding:10px}.stats{grid-template-columns:1fr 1fr}.top{align-items:flex-start}.userbar{gap:7px}.userbar #email{display:none}}@media(max-width:430px){.stats{grid-template-columns:1fr}.panel{padding:15px}}
+</style></head>
+<body>
+<div class="wrap">
+<header class="top">
+ <div class="brand"><div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 20V8m0 0c-4-5-9-1-7 4 1 4 4 7 7 8 3-1 6-4 7-8 2-5-3-9-7-4Z"/><path d="M12 7c0-3 2-5 5-5"/></svg></div>PULSE <span class="muted small">/ COMMUNITY</span></div>
+ <div class="userbar hidden" id="userbar"><div class="avatar" id="avatar">U</div><span id="email" class="small muted"></span><button class="btn secondary" id="logout">Wyloguj</button></div>
+</header>
+<section id="authView" class="panel auth">
+ <div class="brand" style="margin-bottom:22px"><div class="logo">✦</div>PULSE</div>
+ <h1>Witaj w centrum ankiet.</h1><p class="muted">Zaloguj się, aby zobaczyć ankiety społeczności.</p>
+ <div class="tabs"><button id="loginTab" class="active">Logowanie</button><button id="signupTab">Rejestracja</button></div>
+ <form id="authForm"><div class="field"><label>Adres e-mail</label><input id="authEmail" type="email" required autocomplete="email" placeholder="ty@email.com"></div><div class="field"><label>Hasło</label><input id="authPassword" type="password" required minlength="6" autocomplete="current-password" placeholder="Minimum 6 znaków"></div><button class="btn" style="width:100%" id="authSubmit">Zaloguj się</button></form>
+ <p id="authMsg" class="small muted"></p><div class="notice">Konto administratora musi zostać przyznane ręcznie w Supabase. Sama rejestracja nie daje uprawnień administratora.</div>
+</section>
+<div id="appView" class="layout hidden">
+ <aside class="side">
+  <button class="nav active" data-page="home"><span class="ico">⌂</span> Przegląd</button>
+  <button class="nav" data-page="surveys"><span class="ico">▤</span> Ankiety i quizy</button>
+  <button class="nav admin-only hidden" data-page="create"><span class="ico">＋</span> Utwórz ankietę</button>
+  <button class="nav admin-only hidden" data-page="results"><span class="ico">▥</span> Wyniki i statystyki</button>
+  <button class="nav admin-only hidden" data-page="people"><span class="ico">♙</span> Użytkownicy</button>
+ </aside>
+ <main class="main">
+  <section id="homePage" class="page">
+   <div class="welcome"><h1 id="greeting">Cześć!</h1><p>Wszystko, co dzieje się w Twojej społeczności, w jednym miejscu.</p></div>
+   <div class="hero-scene" aria-label="Animacja wypełniania ankiety i pojawiania się wyników">
+    <div class="hero-glow"></div>
+    <div class="survey-float"><div class="survey-face">
+     <div class="survey-top"><div class="survey-brand">PULSE / FORM</div><div class="survey-mark">✳</div></div>
+     <div class="survey-line" style="width:74%"></div><div class="survey-line short"></div>
+     <div class="survey-question">Co sądzisz o nowym quizie?</div>
+     <div class="survey-options"><span></span><span></span><span></span></div>
+    </div></div>
+    <div class="result-terminal"><div class="result-screen">✓</div><div class="result-bars"><i></i><i></i><i></i><i></i></div></div>
+    <div class="hero-copy"><b>YOUR COMMUNITY. YOUR DATA.</b><span>Ankiety, odpowiedzi i statystyki w jednym miejscu.</span></div>
+    <div class="hero-status">RESPONSE RECORDED</div>
+   </div>
+   <div class="stats"><div class="stat"><div class="sico">▤</div><div class="n" id="statSurveys">—</div><div class="muted small">Dostępne ankiety</div></div><div class="stat"><div class="sico">✓</div><div class="n" id="statDone">—</div><div class="muted small">Twoje odpowiedzi</div></div><div class="stat admin-only hidden"><div class="sico">♙</div><div class="n" id="statUsers">—</div><div class="muted small">Użytkownicy</div></div></div>
+   <div class="panel"><div class="panel-head"><h2>Polecane dla Ciebie</h2><button class="btn secondary" data-goto="surveys">Zobacz wszystkie</button></div><div id="homeSurveys" class="grid"></div></div>
+  </section>
+  <section id="surveysPage" class="page hidden"><div class="welcome"><h1>Ankiety i quizy</h1><p>Wybierz ankietę i podziel się odpowiedziami.</p></div><div id="surveyList" class="grid"></div></section>
+  <section id="createPage" class="page hidden"><div class="welcome"><h1>Nowa ankieta</h1><p>Stwórz ankietę lub quiz dla swojej społeczności.</p></div>
+   <div class="panel"><form id="createForm"><div class="field"><label>Tytuł</label><input id="surveyTitle" required maxlength="100" placeholder="Np. Quiz wiedzy o historii Polski"></div><div class="field"><label>Opis</label><textarea id="surveyDesc" maxlength="500" placeholder="Krótko opisz, czego dotyczy ankieta"></textarea></div><div class="field"><label>Rodzaj</label><select id="surveyKind"><option value="survey">Ankieta</option><option value="quiz">Quiz</option></select></div><div class="divider"></div><div class="panel-head"><h2>Pytania</h2><button type="button" class="btn secondary" id="addQuestion">＋ Dodaj pytanie</button></div><div id="questionBuilder"></div><button class="btn" type="submit">Opublikuj ankietę</button><p id="createMsg" class="small muted"></p></form></div>
+  </section>
+  <section id="fillPage" class="page hidden"><button class="btn secondary" id="backSurveys">← Wróć</button><div class="welcome" style="margin-top:18px"><h1 id="fillTitle"></h1><p id="fillDesc"></p></div><form id="answerForm" class="panel"><div id="answerQuestions"></div><button class="btn" type="submit">Wyślij odpowiedzi</button><p id="answerMsg" class="small muted"></p></form></section>
+  <section id="resultsPage" class="page hidden"><div class="welcome"><h1>Wyniki i statystyki</h1><p>Tylko administrator ma dostęp do tych danych.</p></div><div class="panel"><div class="field"><label>Wybierz ankietę</label><select id="resultSurvey"></select></div><div id="resultContent"></div></div></section>
+  <section id="peoplePage" class="page hidden"><div class="welcome"><h1>Użytkownicy</h1><p>Osoby zarejestrowane w Twojej społeczności.</p></div><div class="panel"><div id="peopleContent" class="table-wrap"></div></div></section>
+ </main>
+</div>
+</div>
+<script>
+/* 1. Wklej dane projektu z Supabase: Project Settings -> API */
+const SUPABASE_URL = "https://kvqasrxxjzlxxqbalxeg.supabase.co/";
+const SUPABASE_ANON_KEY = "sb_publishable_EAL96bvjnWhtuVFFU35O1g_SZZL1aAQ";
+const configured = SUPABASE_URL.startsWith("https://") && !SUPABASE_URL.includes("WSTAW_") && !SUPABASE_ANON_KEY.includes("WSTAW_");
+const db = configured ? window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY) : null;
+let user=null, role="user", surveys=[], myResponses=[], currentSurvey=null, authMode="login", questionCount=0;
+const $=id=>document.getElementById(id);
+function msg(id,text,cls="muted"){const el=$(id);el.textContent=text;el.className="small "+cls}
+function esc(s=""){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function page(name){document.querySelectorAll(".page").forEach(x=>x.classList.add("hidden"));$(name+"Page").classList.remove("hidden");document.querySelectorAll(".nav").forEach(x=>x.classList.toggle("active",x.dataset.page===name))}
+function adminUI(){document.querySelectorAll(".admin-only").forEach(x=>x.classList.toggle("hidden",role!=="admin"))}
+async function start(){
+ if(!configured){$("authView").classList.remove("hidden");msg("authMsg","Najpierw wpisz URL i klucz Supabase w kodzie pliku.","error");return}
+ const {data:{session}}=await db.auth.getSession();if(session)await enter(session.user);
+ db.auth.onAuthStateChange((_event,session)=>{if(session&&!user)setTimeout(()=>enter(session.user),0);else if(!session){user=null;$("appView").classList.add("hidden");$("authView").classList.remove("hidden");$("userbar").classList.add("hidden")}});
+}
+async function enter(u){
+ user=u;const {data:profile,error}=await db.from("profiles").select("role").eq("id",u.id).single();
+ if(error){msg("authMsg","Nie udało się odczytać profilu: "+error.message,"error");return}
+ role=profile?.role||"user";$("authView").classList.add("hidden");$("appView").classList.remove("hidden");$("userbar").classList.remove("hidden");$("email").textContent=u.email||"";$("avatar").textContent=(u.email||"U")[0].toUpperCase();$("greeting").textContent=role==="admin"?"Panel administratora.":"Cześć!";adminUI();await loadData();page("home");
+}
+async function loadData(){
+ const {data:s,error}=await db.from("surveys").select("*").order("created_at",{ascending:false});if(error){alert("Błąd ankiet: "+error.message);return}surveys=s||[];
+ const {data:r}=await db.from("responses").select("survey_id").eq("user_id",user.id);myResponses=r||[];
+ $("statSurveys").textContent=surveys.length;$("statDone").textContent=myResponses.length;
+ $("homeSurveys").innerHTML=cards(surveys.slice(0,3));$("surveyList").innerHTML=cards(surveys);
+ if(role==="admin"){const {count}=await db.from("profiles").select("*",{count:"exact",head:true});$("statUsers").textContent=count??"—";fillResultsSelect();loadPeople()}
+}
+function cards(items){if(!items.length)return '<div class="empty">Nie ma jeszcze żadnych ankiet.</div>';return items.map(s=>{const done=myResponses.some(r=>r.survey_id===s.id);return `<article class="survey-card"><span class="tag">${s.kind==="quiz"?"QUIZ":"ANKIETA"}</span><h3>${esc(s.title)}</h3><p>${esc(s.description||"Bez opisu")}</p><div class="row between"><span class="small muted">${(s.questions||[]).length} pytań</span><button class="btn ${done?"secondary":""}" onclick="openSurvey('${s.id}')" ${done?"disabled":""}>${done?"Wypełniono":"Otwórz →"}</button></div></article>`}).join("")}
+window.openSurvey=async id=>{
+ const s=surveys.find(x=>x.id===id);if(!s)return;currentSurvey=s;
+ if(myResponses.some(r=>r.survey_id===id)){alert("Tę ankietę już wypełniono.");return}
+ $("fillTitle").textContent=s.title;$("fillDesc").textContent=s.description||"";
+ $("answerQuestions").innerHTML=(s.questions||[]).map((q,i)=>`<div class="question"><strong>${i+1}. ${esc(q.title)}</strong>${q.type==="text"?`<div class="field"><textarea name="q${i}" required placeholder="Twoja odpowiedź..."></textarea></div>`:(q.options||[]).map((o,j)=>`<label class="choice"><input type="${q.type==="multi"?"checkbox":"radio"}" name="q${i}" value="${esc(o)}" ${q.type==="single"?"required":""}>${esc(o)}</label>`).join("")}</div>`).join("");
+ page("fill");
+};
+$("answerForm").addEventListener("submit",async e=>{
+ e.preventDefault();if(!currentSurvey)return;const answers={};let valid=true;
+ currentSurvey.questions.forEach((q,i)=>{const els=[...document.querySelectorAll(`[name="q${i}"]`)];let val=q.type==="text"?els[0].value:q.type==="multi"?els.filter(x=>x.checked).map(x=>x.value):(els.find(x=>x.checked)?.value||"");if(!val||(Array.isArray(val)&&!val.length))valid=false;answers[i]={question:q.title,answer:val}});
+ if(!valid){msg("answerMsg","Odpowiedz na każde pytanie.","error");return}
+ const {error}=await db.from("responses").insert({survey_id:currentSurvey.id,user_id:user.id,answers});
+ if(error){msg("answerMsg","Nie udało się wysłać: "+error.message,"error");return}
+ msg("answerMsg","Odpowiedzi zapisane. Dziękujemy!","success");await loadData();setTimeout(()=>page("surveys"),900);
+});
+function addBuilderQuestion(){
+ const id=questionCount++;const el=document.createElement("div");el.className="question";el.dataset.qid=id;
+ el.innerHTML=`<div class="field"><label>Treść pytania</label><input class="qtitle" required placeholder="Wpisz pytanie"></div><div class="field"><label>Typ odpowiedzi</label><select class="qtype"><option value="single">Jedna odpowiedź</option><option value="multi">Wiele odpowiedzi</option><option value="text">Odpowiedź tekstowa</option></select></div><div class="field options"><label>Odpowiedzi (każda w osobnej linii)</label><textarea class="qoptions" placeholder="Odpowiedź A&#10;Odpowiedź B&#10;Odpowiedź C"></textarea></div><div class="q-actions"><span class="small muted">Pytanie ${id+1}</span><button type="button" class="btn danger remove">Usuń pytanie</button></div>`;
+ el.querySelector(".qtype").addEventListener("change",e=>el.querySelector(".options").classList.toggle("hidden",e.target.value==="text"));el.querySelector(".remove").onclick=()=>el.remove();$("questionBuilder").append(el);
+}
+$("addQuestion").onclick=addBuilderQuestion;
+$("createForm").addEventListener("submit",async e=>{
+ e.preventDefault();const questions=[...$("questionBuilder").children].map(el=>({title:el.querySelector(".qtitle").value.trim(),type:el.querySelector(".qtype").value,options:el.querySelector(".qtype").value==="text"?[]:el.querySelector(".qoptions").value.split("\n").map(x=>x.trim()).filter(Boolean)}));
+ if(!questions.length){msg("createMsg","Dodaj przynajmniej jedno pytanie.","error");return}
+ if(questions.some(q=>!q.title||(q.type!=="text"&&q.options.length<2))){msg("createMsg","Każde pytanie wyboru musi mieć treść i co najmniej 2 odpowiedzi.","error");return}
+ const {error}=await db.from("surveys").insert({title:$("surveyTitle").value.trim(),description:$("surveyDesc").value.trim(),kind:$("surveyKind").value,questions,created_by:user.id});
+ if(error){msg("createMsg","Błąd: "+error.message,"error");return}
+ $("createForm").reset();$("questionBuilder").innerHTML="";questionCount=0;msg("createMsg","Ankieta została opublikowana!","success");await loadData();page("surveys");
+});
+async function fillResultsSelect(){const sel=$("resultSurvey");sel.innerHTML=surveys.map(s=>`<option value="${s.id}">${esc(s.title)}</option>`).join("");if(surveys.length)await showResults(surveys[0].id);else $("resultContent").innerHTML='<div class="empty">Brak ankiet do podsumowania.</div>'}
+$("resultSurvey").onchange=e=>showResults(e.target.value);
+async function showResults(id){
+ const s=surveys.find(x=>x.id===id);if(!s)return;const {data:rs,error}=await db.from("responses").select("*").eq("survey_id",id).order("created_at",{ascending:false});
+ if(error){$("resultContent").textContent="Nie udało się pobrać wyników: "+error.message;return}
+ const userIds=[...new Set((rs||[]).map(r=>r.user_id))];
+ const {data:profiles}=userIds.length?await db.from("profiles").select("id,email").in("id",userIds):{data:[]};
+ const emailById=Object.fromEntries((profiles||[]).map(p=>[p.id,p.email]));
+ let html=`<div class="row between"><h2>${esc(s.title)}</h2><span class="tag">${rs.length} odpowiedzi</span></div><div class="divider"></div>`;
+ s.questions.forEach((q,i)=>{
+  const vals=rs.map(r=>r.answers?.[i]?.answer).flatMap(v=>Array.isArray(v)?v:[v]).filter(Boolean);const counts={};vals.forEach(v=>counts[v]=(counts[v]||0)+1);
+  html+=`<div class="question"><strong>${i+1}. ${esc(q.title)}</strong><p class="small muted">${vals.length} odpowiedzi</p>`;
+  if(q.type==="text"){html+=vals.map(v=>`<div class="notice">${esc(v)}</div>`).join("")||'<p class="muted small">Brak odpowiedzi.</p>'}
+  else{html+=Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([v,n])=>`<div style="margin:12px 0"><div class="row between small"><span>${esc(v)}</span><b>${n} (${Math.round(n/Math.max(vals.length,1)*100)}%)</b></div><div class="bar"><i style="width:${n/Math.max(vals.length,1)*100}%"></i></div></div>`).join("")||'<p class="muted small">Brak odpowiedzi.</p>'}
+  html+="</div>";
+ });
+ html+=`<div class="divider"></div><h2>Odpowiedzi poszczególnych osób</h2><div class="table-wrap"><table><thead><tr><th>Użytkownik</th><th>Data</th><th>Odpowiedzi</th></tr></thead><tbody>`;
+ html+=rs.map(r=>`<tr><td>${esc(emailById[r.user_id]||"Użytkownik")}</td><td>${new Date(r.created_at).toLocaleString("pl-PL")}</td><td>${Object.values(r.answers||{}).map(a=>esc(a.question)+": "+esc(Array.isArray(a.answer)?a.answer.join(", "):a.answer)).join("<br>")}</td></tr>`).join("");
+ $("resultContent").innerHTML=html+"</tbody></table></div>";
+}
+async function loadPeople(){const {data,error}=await db.from("profiles").select("id,email,role,created_at").order("created_at",{ascending:false});if(error){$("peopleContent").textContent=error.message;return}
+ $("peopleContent").innerHTML=`<table><thead><tr><th>E-mail</th><th>Rola</th><th>Data rejestracji</th></tr></thead><tbody>${data.map(p=>`<tr><td>${esc(p.email||"—")}</td><td>${p.role==="admin"?"Administrator":"Użytkownik"}</td><td>${new Date(p.created_at).toLocaleDateString("pl-PL")}</td></tr>`).join("")}</tbody></table>`;
+}
+$("loginTab").onclick=()=>setAuthMode("login");$("signupTab").onclick=()=>setAuthMode("signup");
+function setAuthMode(m){authMode=m;$("loginTab").classList.toggle("active",m==="login");$("signupTab").classList.toggle("active",m==="signup");$("authSubmit").textContent=m==="login"?"Zaloguj się":"Utwórz konto";$("authPassword").autocomplete=m==="login"?"current-password":"new-password";msg("authMsg","")}
+$("authForm").onsubmit=async e=>{e.preventDefault();if(!db){msg("authMsg","Uzupełnij konfigurację Supabase w kodzie.","error");return}
+ const email=$("authEmail").value,password=$("authPassword").value;let result=authMode==="login"?await db.auth.signInWithPassword({email,password}):await db.auth.signUp({email,password});
+ if(result.error){msg("authMsg",result.error.message,"error");return}
+ if(authMode==="signup"&&!result.data.session){msg("authMsg","Konto utworzone. Sprawdź pocztę i potwierdź adres e-mail.","success");return}
+ if(result.data.user)await enter(result.data.user);
+};
+$("logout").onclick=()=>db.auth.signOut();$("backSurveys").onclick=()=>page("surveys");
+document.querySelectorAll(".nav").forEach(b=>b.onclick=()=>page(b.dataset.page));document.querySelectorAll("[data-goto]").forEach(b=>b.onclick=()=>page(b.dataset.goto));
+start();
+</script></body></html>
